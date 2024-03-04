@@ -6,8 +6,6 @@ from rest_framework.generics import (
     UpdateAPIView,
 )
 from rest_framework.permissions import AllowAny, IsAuthenticated
-from rest_framework.response import Response
-from rest_framework.status import HTTP_204_NO_CONTENT
 from rest_framework_simplejwt.views import TokenObtainPairView
 
 from .models import UserProfile
@@ -18,12 +16,12 @@ from .serializers import (
 )
 
 
-class LoginView(TokenObtainPairView):
+class UserLoginView(TokenObtainPairView):
     permission_classes = (AllowAny,)
     serializer_class = MyTokenObtainPairSerializer
 
 
-class RegisterView(CreateAPIView):
+class UserRegisterView(CreateAPIView):
     queryset = User.objects.all()
     permission_classes = (AllowAny,)
     serializer_class = RegisterSerializer
@@ -35,7 +33,6 @@ class DeleteUserView(DestroyAPIView):
     def destroy(self, request, *args, **kwargs):
         instance = request.user
         self.perform_destroy(instance)
-        return Response({'message': 'User deleted successfully.'}, status=HTTP_204_NO_CONTENT)
 
 
 class UserProfileRetrieveView(RetrieveAPIView):
