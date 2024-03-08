@@ -1,13 +1,11 @@
 from rest_framework import serializers
 
-from .models import Comment, Pattern
+from .models import Comment, Pattern, Vote
 
 
 class PatternSerializer(serializers.ModelSerializer):
     prompt = serializers.CharField(write_only=True)
     rating = serializers.DecimalField(max_digits=5, decimal_places=2, read_only=True)
-    upvotes = serializers.IntegerField(read_only=True)
-    downvotes = serializers.IntegerField(read_only=True)
 
     class Meta:
         model = Pattern
@@ -15,8 +13,6 @@ class PatternSerializer(serializers.ModelSerializer):
             'id',
             'prompt',
             'image_url',
-            'upvotes',
-            'downvotes',
             'rating',
             'created_at',
             'updated_at',
@@ -31,3 +27,9 @@ class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
         fields = ('id', 'body', 'created_at', 'updated_at')
+
+
+class VoteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Vote
+        fields = ('id', 'vote_type', 'created_at')
