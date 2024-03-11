@@ -10,7 +10,7 @@ class Pattern(models.Model):
     )
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='patterns')
     title = models.CharField(max_length=100, blank=True, null=True)
-    image_url = models.URLField()
+    image_url = models.URLField(unique=True)
     rating = models.DecimalField(max_digits=5, decimal_places=2, default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

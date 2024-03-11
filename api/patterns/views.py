@@ -9,6 +9,7 @@ from rest_framework.generics import (
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 
 from .models import Comment, Pattern, Vote
+from .permissions import IsOwnerOrReadOnly
 from .serializers import CommentSerializer, PatternSerializer, VoteSerializer
 
 
@@ -24,7 +25,7 @@ class PatternsListCreateView(ListCreateAPIView):
 class PatternsRetreiveDeleteView(RetrieveDestroyAPIView):
     queryset = Pattern.objects.all()
     serializer_class = PatternSerializer
-    permission_classes = (IsAuthenticatedOrReadOnly,)
+    permission_classes = (IsOwnerOrReadOnly,)
 
 
 class PatternCommentsListCreateView(ListCreateAPIView):
@@ -42,7 +43,7 @@ class PatternCommentsListCreateView(ListCreateAPIView):
 
 class PatternCommentRUDView(RetrieveUpdateDestroyAPIView):
     serializer_class = CommentSerializer
-    permission_classes = (IsAuthenticatedOrReadOnly,)
+    permission_classes = (IsOwnerOrReadOnly,)
     lookup_url_kwarg = 'ck'
 
     def get_queryset(self):
