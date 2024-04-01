@@ -1,5 +1,4 @@
 from rest_framework import serializers
-from rest_framework.exceptions import ValidationError
 
 from .models import Comment, Pattern, Vote
 from .utils import generate_img

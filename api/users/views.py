@@ -3,6 +3,7 @@ from drf_spectacular.utils import extend_schema
 from rest_framework.generics import (
     CreateAPIView,
     DestroyAPIView,
+    ListAPIView,
     RetrieveAPIView,
     UpdateAPIView,
 )
@@ -47,6 +48,12 @@ class DeleteUserView(DestroyAPIView):
     def destroy(self, request, *args, **kwargs):
         instance = request.user
         self.perform_destroy(instance)
+
+
+@extend_schema(tags=['Users'], description='get all user profiles')
+class UserProfileListView(ListAPIView):
+    queryset = UserProfile.objects.all()
+    serializer_class = UserProfileSerializer
 
 
 @extend_schema(tags=['Users'], description='get the profile of a user')

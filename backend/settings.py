@@ -42,11 +42,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
     'drf_spectacular',
     'corsheaders',
     'rest_framework',
+
     'api.users.apps.UsersConfig',
     'api.patterns.apps.PatternsConfig',
+    'api.chat.apps.ChatConfig',
 ]
 
 REST_FRAMEWORK = {
