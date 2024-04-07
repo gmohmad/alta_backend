@@ -6,11 +6,10 @@ from .models import Chat, Message
 class ChatSerializer(serializers.ModelSerializer):
     initiator = serializers.PrimaryKeyRelatedField(read_only=True)
     receiver = serializers.PrimaryKeyRelatedField(read_only=True)
-    error = serializers.CharField(allow_blank=True, required=False, read_only=True)
 
     class Meta:
         model = Chat
-        fields = ('id', 'initiator', 'receiver', 'created_at', 'error')
+        fields = ('id', 'initiator', 'receiver', 'created_at')
 
 
 class MessageSerializer(serializers.ModelSerializer):

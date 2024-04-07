@@ -1,8 +1,8 @@
 from django.contrib.auth.models import User
 from django.db.models import Q
+from drf_spectacular.utils import extend_schema
 from django.shortcuts import get_object_or_404
 from rest_framework import status
-from rest_framework.exceptions import ValidationError
 from rest_framework.generics import (
     CreateAPIView,
     DestroyAPIView,
@@ -19,7 +19,10 @@ from .serializers import ChatSerializer, MessageSerializer
 
 # Create your views here.
 
-
+@extend_schema(
+    tags=['Chats'],
+    description='List all the chats of the authenticated user'
+)
 class ChatListView(ListAPIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = ChatSerializer
@@ -27,7 +30,10 @@ class ChatListView(ListAPIView):
     def get_queryset(self):
         return Chat.objects.filter(Q(initiator=self.request.user) | Q(receiver=self.request.user))
 
-
+@extend_schema(
+    tags=['Chats'],
+    description='Create a chat'
+)
 class ChatCreateView(CreateAPIView):
     queryset = Chat.objects.all()
     serializer_class = ChatSerializer
@@ -41,9 +47,10 @@ class ChatCreateView(CreateAPIView):
                                    Q(initiator=participant, receiver=self.request.user))
 
         if chat.exists():
-            raise ValidationError('You already have a chat with this user.')
+            return Response({'message': 'You already have a chat with this user.'}, status=status.HTTP_400_BAD_REQUEST)
         if int(receiver_id) == self.request.user.id:
-            raise ValidationError("You can't create a chat with yourself")
+            return Response({'message': 'You cannot create a chat with yourself.'}, status=status.HTTP_400_BAD_REQUEST)
+
 
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -55,13 +62,19 @@ class ChatCreateView(CreateAPIView):
     def perform_create(self, serializer, participant):
         serializer.save(initiator=self.request.user, receiver=participant)
 
-
+@extend_schema(
+    tags=['Chats'],
+    description='Delete a chat'
+)
 class ChatDeleteView(DestroyAPIView):
     queryset = Chat.objects.all()
     serializer_class = ChatSerializer
     permission_classes = (IsOwner,)
 
-
+@extend_schema(
+    tags=['Messages'],
+    description='List all the messages in chat or create one'
+)
 class MessageListCreateView(ListCreateAPIView):
     serializer_class = MessageSerializer
     permission_classes = (IsAuthenticated,)
@@ -74,7 +87,10 @@ class MessageListCreateView(ListCreateAPIView):
         chat_id = self.kwargs['pk']
         serializer.save(chat_id=chat_id, sender=self.request.user)
 
-
+@extend_schema(
+    tags=['Messages'],
+    description='Retrieve/update/delete a message'
+)
 class MessageRUDView(RetrieveUpdateDestroyAPIView):
     serializer_class = MessageSerializer
     permission_classes = (IsAuthenticated,)
