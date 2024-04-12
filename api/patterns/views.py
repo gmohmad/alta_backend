@@ -1,5 +1,6 @@
 from drf_spectacular.utils import extend_schema
 from rest_framework.generics import (
+    ListAPIView,
     CreateAPIView,
     DestroyAPIView,
     ListCreateAPIView,
@@ -7,7 +8,7 @@ from rest_framework.generics import (
     RetrieveUpdateDestroyAPIView,
     UpdateAPIView,
 )
-from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
+from rest_framework.permissions import AllowAny, IsAuthenticated, IsAuthenticatedOrReadOnly
 
 from .models import Comment, Pattern, Vote
 from .permissions import IsOwnerOrReadOnly
@@ -25,6 +26,18 @@ class PatternsListCreateView(ListCreateAPIView):
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
+
+
+@extend_schema(
+    tags=['Patterns'],
+    description='List all patterns of the current user'
+)
+class ListMyPatternsView(ListAPIView):
+    permission_classes = (AllowAny,)
+    serializer_class = PatternSerializer
+
+    def get_queryset(self):
+        return Pattern.objects.filter(owner=self.request.user)
 
 
 @extend_schema(

@@ -1,6 +1,7 @@
 from django.urls import path
 
 from .views import (
+    ListMyPatternsView,
     PatternCommentRUDView,
     PatternCommentsListCreateView,
     PatternsListCreateView,
@@ -11,6 +12,7 @@ from .views import (
 
 urlpatterns = [
     path('', PatternsListCreateView.as_view(), name='pattern-list-create'),
+    path('my-patterns/', ListMyPatternsView.as_view(), name='lsit-my-patterns'),
     path('<str:pk>/', PatternsRetreiveDeleteView.as_view(), name='pattern-retrieve-delete'),
 
     path('<str:pk>/comments/', PatternCommentsListCreateView.as_view(), name='comment-list-create'),
