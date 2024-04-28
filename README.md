@@ -1,6 +1,6 @@
 # alta_backend
 
-## The documentation is available here - http://127.0.0.1:8000/api/schema/docs. You need to start the project first
+### The documentation is available here - http://127.0.0.1:8000/api/schema/docs. You need to start the project first
 
 # Project startup
 
